@@ -11,7 +11,6 @@ router = APIRouter()
 
 
 def obter_ip_cliente(request: Request) -> str:
-    """Extrai o IP real do cliente via X-Forwarded-For ou fallback para request.client."""
     forwarded_for = request.headers.get("X-Forwarded-For")
     if forwarded_for:
         return forwarded_for.split(",")[0].strip()

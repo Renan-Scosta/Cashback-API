@@ -13,13 +13,7 @@ def _quantize(value: Decimal) -> Decimal:
 
 
 def calcular_cashback(valor_compra: Decimal, is_vip: bool) -> dict:
-    """Calcula o cashback detalhado com base no valor da compra e tipo de cliente.
-
-    Ordem de cálculo (conforme regras de negócio):
-        1. Cashback base = 5% do valor da compra
-        2. Bônus VIP = 10% do cashback base (se aplicável)
-        3. Promoção: valor > R$500 → cashback total × 2
-    """
+   
     if valor_compra < Decimal("0"):
         raise ValueError("O valor da compra não pode ser negativo.")
 
@@ -42,4 +36,5 @@ def calcular_cashback(valor_compra: Decimal, is_vip: bool) -> dict:
         "subtotal": subtotal,
         "promocao_aplicada": promocao_aplicada,
         "cashback_total": cashback_total,
+    
     }

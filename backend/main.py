@@ -20,7 +20,7 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(
     title="Cashback API",
-    description="API para cálculo de cashback com regras de negócio da fintech.",
+    description="API para processamento de cashback e histórico de consultas",
     version="1.0.0",
     lifespan=lifespan,
 )
@@ -35,7 +35,6 @@ app.add_middleware(
 
 app.include_router(router)
 
-# Servir frontend estático (HTML/CSS/JS) na raiz
 frontend_dir = Path(__file__).resolve().parent.parent / "frontend"
 if frontend_dir.exists():
     app.mount("/", StaticFiles(directory=str(frontend_dir), html=True), name="frontend")
