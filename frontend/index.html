@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Calculadora de Cashback — Simule seu cashback com base no valor da compra e tipo de cliente.">
+    <title>Calculadora de Cashback</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@300;400;450;500;550;600;650;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Background animated orbs -->
+    <div class="bg-orbs" aria-hidden="true">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+        <div class="orb orb-3"></div>
+    </div>
+
+    <main class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="logo">
+                <div class="logo-icon">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"/>
+                        <path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"/>
+                        <path d="M12 18V6"/>
+                    </svg>
+                </div>
+                <h1>Calculadora de Cashback</h1>
+            </div>
+            <p class="subtitle">Calcule o retorno da sua compra</p>
+        </header>
+
+        <!-- Calculator Card -->
+        <section class="card calculator-card" id="calculator-section">
+            <div class="card-header">
+                <h2>Nova Simulação</h2>
+                <div class="badge">Até 11% de retorno</div>
+            </div>
+
+            <form id="cashback-form" autocomplete="off">
+                <div class="form-group">
+                    <label for="tipo-cliente">Tipo de Cliente</label>
+                    <div class="select-wrapper">
+                        <select id="tipo-cliente" name="tipo_cliente" required>
+                            <option value="Normal">Normal</option>
+                            <option value="VIP">VIP ⭐</option>
+                        </select>
+                        <div class="select-arrow">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="6 9 12 15 18 9"/>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="valor-compra">Valor da Compra (R$)</label>
+                    <div class="input-wrapper">
+                        <span class="input-prefix">R$</span>
+                        <input
+                            type="number"
+                            id="valor-compra"
+                            name="valor_compra"
+                            placeholder="0,00"
+                            min="0.01"
+                            step="0.01"
+                            required
+                        >
+                    </div>
+                </div>
+
+                <button type="submit" id="btn-calcular" class="btn-primary">
+                    <span class="btn-text">Calcular Cashback</span>
+                    <span class="btn-loading" hidden>
+                        <span class="spinner"></span>
+                        Calculando...
+                    </span>
+                </button>
+            </form>
+
+            <!-- Resultado -->
+            <div id="resultado" class="resultado" hidden>
+                <div class="resultado-header">
+                    <h3>Seu Cashback</h3>
+                    <span id="resultado-badge" class="resultado-badge"></span>
+                </div>
+                <div class="resultado-valor" id="resultado-valor">R$ 0,00</div>
+
+                <div class="resultado-detalhes">
+                    <div class="detalhe-row">
+                        <span class="detalhe-label">Valor da compra</span>
+                        <span class="detalhe-value" id="detalhe-valor-compra">—</span>
+                    </div>
+                    <div class="detalhe-row">
+                        <span class="detalhe-label">Cashback base (5%)</span>
+                        <span class="detalhe-value" id="detalhe-cashback-base">—</span>
+                    </div>
+                    <div class="detalhe-row" id="row-bonus-vip" hidden>
+                        <span class="detalhe-label">Bônus VIP (+10%)</span>
+                        <span class="detalhe-value" id="detalhe-bonus-vip">—</span>
+                    </div>
+                    <div class="detalhe-row" id="row-promocao" hidden>
+                        <span class="detalhe-label">Promoção (×2) 🎉</span>
+                        <span class="detalhe-value" id="detalhe-promocao">Aplicada!</span>
+                    </div>
+                    <div class="detalhe-row detalhe-total">
+                        <span class="detalhe-label">Cashback total</span>
+                        <span class="detalhe-value" id="detalhe-total">—</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Histórico -->
+        <section class="card historico-card" id="historico-section">
+            <div class="card-header">
+                <h2>Histórico de Consultas</h2>
+                <button id="btn-refresh" class="btn-icon" title="Atualizar histórico">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="23 4 23 10 17 10"/>
+                        <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
+                    </svg>
+                </button>
+            </div>
+
+            <div id="historico-loading" class="historico-status">
+                <span class="spinner"></span>
+                Carregando histórico...
+            </div>
+
+            <div id="historico-vazio" class="historico-status" hidden>
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.4">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                    <polyline points="14 2 14 8 20 8"/>
+                    <line x1="16" y1="13" x2="8" y2="13"/>
+                    <line x1="16" y1="17" x2="8" y2="17"/>
+                    <polyline points="10 9 9 9 8 9"/>
+                </svg>
+                <p>Nenhuma consulta registrada para seu IP.</p>
+                <p class="historico-hint">Faça sua primeira simulação acima!</p>
+            </div>
+
+            <div id="historico-lista" class="historico-lista" hidden></div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>Calculadora de Cashback &copy; 2026</p>
+            <p class="footer-ip">Seu IP: <span id="user-ip">detectando...</span></p>
+        </footer>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>
